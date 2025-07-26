@@ -2,7 +2,7 @@
 // Dashboard generator for rotating screensaver displays
 // Ideal for Kindle jailbreaks with the Online-ScreenSavers extension
 
-$dashboards = ['weather', 'alerts', 'image'];
+$dashboards = ['weather'];//, 'alerts', 'image'];
 $stateFile = __DIR__ . '/dashboard_state.txt';
 
 $current = 0;
