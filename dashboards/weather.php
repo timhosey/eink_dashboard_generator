@@ -4,20 +4,27 @@ header("Content-Type: image/png");
 $width = 600;
 $height = 800;
 
-$img = imagecreatetruecolor($width, $height);
-$white = imagecolorallocate($img, 255, 255, 255);
-$black = imagecolorallocate($img, 0, 0, 0);
-imagefilledrectangle($img, 0, 0, $width, $height, $white);
+// Step 1: Create truecolor canvas (RGB)
+$true = imagecreatetruecolor($width, $height);
 
-// Dummy weather info (replace with real API call!)
-$weather = "Partly Cloudy";
-$temp = "72°F";
-$date = date("Y-m-d H:i");
+// Step 2: Fill with white background
+$white = imagecolorallocate($true, 255, 255, 255);
+imagefilledrectangle($true, 0, 0, $width, $height, $white);
 
-imagettftext($img, 20, 0, 20, 60, $black, "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "Weather");
-imagettftext($img, 16, 0, 20, 120, $black, "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "Condition: $weather");
-imagettftext($img, 16, 0, 20, 160, $black, "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "Temp: $temp");
-imagettftext($img, 12, 0, 20, 780, $black, "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "Updated: $date");
+// Step 3: Draw content (you can use shades of gray, black, etc.)
+$black = imagecolorallocate($true, 0, 0, 0);
+$gray = imagecolorallocate($true, 128, 128, 128);
+imagettftext($true, 20, 0, 20, 60, $black, "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "E-Ink Grayscale FTW!");
+imagettftext($true, 16, 0, 20, 100, $gray, "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "Smooth like a kitten~");
 
-imagepng($img);
-imagedestroy($img);
+// Step 4: Convert to 8-bit grayscale palette
+$grayscale = imagecreate($width, $height);
+imagecopy($grayscale, $true, 0, 0, 0, 0, $width, $height);
+imagetruecolortopalette($grayscale, false, 256); // false = no dithering
+
+// Step 5: Output as PNG
+imagepng($grayscale);
+
+// Cleanup
+imagedestroy($true);
+imagedestroy($grayscale);
