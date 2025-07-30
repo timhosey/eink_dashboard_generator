@@ -1,8 +1,8 @@
 <?php
 header("Content-Type: image/png");
 
-$width = 600;
-$height = 800;
+$width = 800;
+$height = 600;
 
 // Step 1: Create truecolor canvas (RGB)
 $true = imagecreatetruecolor($width, $height);
