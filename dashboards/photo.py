@@ -11,7 +11,7 @@ def get_random_photo(api_url, api_key):
         headers = {"x-api-key": api_key}
         resp = requests.get(f"{api_url}/api/assets/random?count=10", headers=headers, timeout=10)
         resp.raise_for_status()
-        # print(f"Response status: {resp.status_code}")
+        print(f"Response status: {resp.status_code}")
         # print(f"Response text: {resp.text}")
         assets = resp.json()
         assets = [a for a in assets if a.get("type") == "IMAGE" and not (a.get("type") == "VIDEO")]
