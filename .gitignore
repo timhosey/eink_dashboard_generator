@@ -1,10 +1,6 @@
 .venv
 dashboard_state.txt
 .DS_Store
-*.otf
-*.ttf
-**/fonts/*
-**/icons/*
 .env
 **/__pycache__/
 **/__pycache__/*.pyc
