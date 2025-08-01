@@ -4,4 +4,6 @@ services:
     container_name: eink-dashboard
     ports:
       - "8000:5001"
+    volumes:
+      - ./.env:/app/.env
     restart: unless-stopped
