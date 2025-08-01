@@ -23,6 +23,8 @@ def serve_dashboard():
     with open(STATE_FILE, 'w') as f:
         f.write(str((idx + 1) % len(DASHBOARDS)))
 
+    print(f"Serving dashboard {dashboard.__name__}, file: {path}")
+
     # Serve image
     return send_file(path, mimetype='image/png')
 
