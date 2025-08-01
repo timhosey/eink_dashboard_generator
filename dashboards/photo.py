@@ -9,12 +9,13 @@ pillow_heif.register_heif_opener()
 def get_random_photo(api_url, api_key):
     try:
         headers = {"x-api-key": api_key}
-        resp = requests.get(f"{api_url}/api/assets/random", headers=headers, timeout=10)
+        resp = requests.get(f"{api_url}/api/assets/random?count=10", headers=headers, timeout=10)
         resp.raise_for_status()
-        print(f"Response status: {resp.status_code}")
-        print(f"Response text: {resp.text}")
+        # print(f"Response status: {resp.status_code}")
+        # print(f"Response text: {resp.text}")
         assets = resp.json()
-        assets = [a for a in assets if a.get("type") == "IMAGE" and not a.get("originalFileName", "").lower().endswith(".mov")]
+        assets = [a for a in assets if a.get("type") == "IMAGE" and not (a.get("type") == "VIDEO")]
+        print(assets)
         if not assets:
             raise ValueError("No image assets available")
         if not assets or not isinstance(assets, list):
@@ -28,6 +29,7 @@ def get_random_photo(api_url, api_key):
         asset_id = photo_meta["id"]
         filename = photo_meta.get("originalFileName", "photo.jpg")
         timestamp = photo_meta.get("exifInfo", {}).get("dateTimeOriginal", "")
+        print(f"{photo_meta.get("type")}")
         location = f"{photo_meta.get("exifInfo", {}).get("city", "N/A")}, {photo_meta.get("exifInfo", {}).get("state", "N/A")}, {photo_meta.get("exifInfo", {}).get("country", "N/A")}"
 
         image_url = f"{api_url}/api/assets/{asset_id}/original"
