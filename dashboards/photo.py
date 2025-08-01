@@ -7,8 +7,10 @@ import pillow_heif
 pillow_heif.register_heif_opener()
 
 def get_random_photo(api_url, api_key):
+    print("Attempting to get a photo.")
     try:
         headers = {"x-api-key": api_key}
+        print(f"Hitting URL {api_url}/api/assets/random?count=10...")
         resp = requests.get(f"{api_url}/api/assets/random?count=10", headers=headers, timeout=10)
         resp.raise_for_status()
         print(f"Response status: {resp.status_code}")
