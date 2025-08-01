@@ -28,7 +28,7 @@ def get_random_photo(api_url, api_key):
         asset_id = photo_meta["id"]
         filename = photo_meta.get("originalFileName", "photo.jpg")
         timestamp = photo_meta.get("exifInfo", {}).get("dateTimeOriginal", "")
-        location = f"{photo_meta.get("exifInfo", {}).get("city", "Unknown City")}, {photo_meta.get("exifInfo", {}).get("state", "N/A")}, {photo_meta.get("exifInfo", {}).get("country", "N/A")}"
+        location = f"{photo_meta.get("exifInfo", {}).get("city", "N/A")}, {photo_meta.get("exifInfo", {}).get("state", "N/A")}, {photo_meta.get("exifInfo", {}).get("country", "N/A")}"
 
         image_url = f"{api_url}/api/assets/{asset_id}/original"
         image_resp = requests.get(image_url, headers=headers, timeout=10)
@@ -53,7 +53,7 @@ def get_random_photo(api_url, api_key):
 
     except Exception as e:
         print(f"Failed to fetch photo: {e}")
-        return None, "N/A", "N/A"
+        return None, "N/A", "N/A", "N/A"
 
 def render():
     IMMICH_API = os.getenv("IMMICH_URL", "http://localhost:2283/api")
@@ -73,7 +73,6 @@ def render():
         draw.rectangle([(0, 700), (600, 800)], fill=255)
         draw.text((10, 710), f"{timestamp} • {name}", fill=0, font=font_small)
         draw.text((10, 735), f"{location}", fill=0, font=font_small)
-        
     else:
         font_large = ImageFont.truetype(font_path, 32)
         draw.text((20, 300), "No photo available", fill=0, font=font_large)
