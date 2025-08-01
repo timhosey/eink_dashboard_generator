@@ -6,4 +6,5 @@ dashboard_state.txt
 **/fonts/*
 **/icons/*
 .env
-**/__pycache__
+**/__pycache__/
+**/__pycache__/*.pyc
