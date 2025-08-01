@@ -4,3 +4,6 @@ dashboard_state.txt
 *.otf
 *.ttf
 **/fonts/*
+**/icons/*
+.env
+**/__pycache__
