@@ -1,2 +1,5 @@
 flask
 pillow
+pillow-heif
+requests
+dotenv
