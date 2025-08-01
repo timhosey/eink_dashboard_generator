@@ -1,9 +1,9 @@
 from flask import Flask, send_file, make_response
-from dashboards import weather#, alerts, image
+from dashboards import weather, photo#, alerts, image
 import os
 
 app = Flask(__name__)
-DASHBOARDS = [weather]#, alerts, image]
+DASHBOARDS = [weather, photo]#, alerts, image]
 STATE_FILE = 'dashboard_state.txt'
 
 @app.route('/')
