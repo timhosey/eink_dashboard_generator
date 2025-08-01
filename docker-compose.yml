@@ -3,5 +3,5 @@ services:
     build: .
     container_name: eink-dashboard
     ports:
-      - "8000:8000"
+      - "8000:5001"
     restart: unless-stopped
