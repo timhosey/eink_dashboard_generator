@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import pillow_heif
 import logging
+from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -15,10 +16,10 @@ def get_random_photo(api_url, api_key):
     print("Attempting to get a photo.")
     try:
         headers = {"x-api-key": api_key}
-        print(f"Hitting URL {api_url}/api/assets/random?count=10...")
+        log.info(f"Requesting API URL {api_url}/api/assets/random?count=10...")
         resp = requests.get(f"{api_url}/api/assets/random?count=10", headers=headers, timeout=10)
         resp.raise_for_status()
-        print(f"Response status: {resp.status_code}")
+        log.info(f"API Response status: {resp.status_code}")
         # print(f"Response text: {resp.text}")
         assets = resp.json()
         assets = [a for a in assets if a.get("type") == "IMAGE" and not (a.get("type") == "VIDEO")]
@@ -36,8 +37,7 @@ def get_random_photo(api_url, api_key):
         asset_id = photo_meta["id"]
         filename = photo_meta.get("originalFileName", "photo.jpg")
         timestamp = photo_meta.get("exifInfo", {}).get("dateTimeOriginal", "")
-        log.info(f"Type: {photo_meta.get("type")}")
-        log.info(f"API URL: {api_url}")
+        log.info(f"Type returned: {photo_meta.get("type")}")
         location = f"{photo_meta.get("exifInfo", {}).get("city", "N/A")}, {photo_meta.get("exifInfo", {}).get("state", "N/A")}, {photo_meta.get("exifInfo", {}).get("country", "N/A")}"
 
         image_url = f"{api_url}/api/assets/{asset_id}/original"
@@ -66,7 +66,8 @@ def get_random_photo(api_url, api_key):
         return None, "N/A", "N/A", "N/A"
 
 def render():
-    IMMICH_API = os.getenv("IMMICH_URL", "http://localhost:2283/api")
+    load_dotenv()
+    IMMICH_API = os.getenv("IMMICH_URL", "http://localhost:2283")
     IMMICH_KEY = os.getenv("IMMICH_KEY", "your-api-key")
 
     img = Image.new('L', (600, 800), color=255)

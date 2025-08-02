@@ -1,4 +1,4 @@
-from flask import Flask, send_file, make_response
+from flask import Flask, send_file, request
 from dashboards import weather, photo#, alerts, image
 import os
 import logging
@@ -12,6 +12,9 @@ STATE_FILE = 'dashboard_state.txt'
 
 @app.route('/')
 def serve_dashboard():
+    requestor = request.headers.get('X-Forwarded-For', request.remote_addr)
+    logging.info(f"Dashboard accessed by: {requestor}")
+
     # Read or rotate
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, 'r') as f:
@@ -27,7 +30,7 @@ def serve_dashboard():
     with open(STATE_FILE, 'w') as f:
         f.write(str((idx + 1) % len(DASHBOARDS)))
 
-    log.info(f"Serving dashboard {dashboard.__name__}, file: {path}")
+    log.info(f"Serving dashboard {dashboard.__name__} from file: {path}")
 
     # Serve image
     return send_file(path, mimetype='image/png')
