@@ -1,6 +1,10 @@
 from flask import Flask, send_file, make_response
 from dashboards import weather, photo#, alerts, image
 import os
+import logging
+
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
 
 app = Flask(__name__)
 DASHBOARDS = [weather, photo]#, alerts, image]
@@ -23,7 +27,7 @@ def serve_dashboard():
     with open(STATE_FILE, 'w') as f:
         f.write(str((idx + 1) % len(DASHBOARDS)))
 
-    print(f"Serving dashboard {dashboard.__name__}, file: {path}")
+    log.info(f"Serving dashboard {dashboard.__name__}, file: {path}")
 
     # Serve image
     return send_file(path, mimetype='image/png')

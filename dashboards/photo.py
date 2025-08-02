@@ -4,6 +4,11 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import pillow_heif
+import logging
+
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
+
 pillow_heif.register_heif_opener()
 
 def get_random_photo(api_url, api_key):
@@ -17,7 +22,7 @@ def get_random_photo(api_url, api_key):
         # print(f"Response text: {resp.text}")
         assets = resp.json()
         assets = [a for a in assets if a.get("type") == "IMAGE" and not (a.get("type") == "VIDEO")]
-        print(assets)
+        # print(assets)
         if not assets:
             raise ValueError("No image assets available")
         if not assets or not isinstance(assets, list):
@@ -31,7 +36,8 @@ def get_random_photo(api_url, api_key):
         asset_id = photo_meta["id"]
         filename = photo_meta.get("originalFileName", "photo.jpg")
         timestamp = photo_meta.get("exifInfo", {}).get("dateTimeOriginal", "")
-        print(f"{photo_meta.get("type")}")
+        log.info(f"Type: {photo_meta.get("type")}")
+        log.info(f"API URL: {api_url}")
         location = f"{photo_meta.get("exifInfo", {}).get("city", "N/A")}, {photo_meta.get("exifInfo", {}).get("state", "N/A")}, {photo_meta.get("exifInfo", {}).get("country", "N/A")}"
 
         image_url = f"{api_url}/api/assets/{asset_id}/original"
@@ -41,7 +47,7 @@ def get_random_photo(api_url, api_key):
         try:
             img = Image.open(BytesIO(image_resp.content))
         except Exception as heic_err:
-            print(f"Primary image load failed, retrying with HEIC decode: {heic_err}")
+            log.error(f"Primary image load failed, retrying with HEIC decode: {heic_err}")
             try:
                 heif_file = pillow_heif.read_heif(BytesIO(image_resp.content))
                 img = Image.frombytes(
@@ -51,12 +57,12 @@ def get_random_photo(api_url, api_key):
                     "raw"
                 )
             except Exception as heic_decode_err:
-                print(f"Failed to decode HEIC image: {heic_decode_err}")
+                log.error(f"Failed to decode HEIC image: {heic_decode_err}")
                 raise heic_decode_err
         return img, filename, timestamp, location
 
     except Exception as e:
-        print(f"Failed to fetch photo: {e}")
+        log.error(f"Failed to fetch photo: {e}")
         return None, "N/A", "N/A", "N/A"
 
 def render():
